@@ -2,6 +2,7 @@ package fileutils
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"os"
 )
@@ -30,3 +31,31 @@ func ReadLines(inputFileName string, lineChannel chan string) {
 	}
 }
 
+func WriteLines(filename string, loadsToWrite []string) error {
+	if fileExists(filename) {
+		err := os.Remove(filename)
+		if err != nil {
+			return err
+		}
+	}
+	f, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	for _,line := range loadsToWrite {
+		fmt.Fprintln(f, line)
+	}
+	if err := f.Close(); err != nil {
+		return err
+	}
+	return nil
+}
+
+
+func fileExists(filename string) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
+}
