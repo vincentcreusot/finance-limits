@@ -7,30 +7,34 @@ import (
 	"time"
 )
 
-// Load represents a Load json input
-type Load struct {
+// inputLoad represents a inputLoad json input
+type inputLoad struct {
 	LoadId     string     `json:"id"`
 	CustomerId string     `json:"customer_id"`
-	Amount     LoadAmount `json:"load_amount"`
+	Amount     loadAmount `json:"load_amount"`
 	Time       time.Time  `json:"time"`
 }
 
-// LoadResponse response given to a load
-type LoadResponse struct {
+// loadResponse response given to a load
+type loadResponse struct {
 	LoadId     string `json:"id"`
 	CustomerId string `json:"customer_id"`
 	Accepted   bool   `json:"accepted"`
 }
 
-type CustomerLoadId struct {
+// customerLoadId couple load / customer
+type customerLoadId struct {
 	LoadId     string
 	CustomerId string
 }
-type LoadAmount struct {
+
+// loadAmount represents the amount value of a load
+type loadAmount struct {
 	Value float64
 }
 
-func (l *LoadAmount) UnmarshalJSON(b []byte) error {
+// UnmarshalJSON implementation of parsing of $123.45 to a loadAmount
+func (l *loadAmount) UnmarshalJSON(b []byte) error {
 	amountStr := string(b)
 	numberAmountStr := amountStr[2 : len(amountStr)-1]
 	amount, err := strconv.ParseFloat(numberAmountStr, 64)
@@ -42,8 +46,8 @@ func (l *LoadAmount) UnmarshalJSON(b []byte) error {
 }
 
 type FinanceLogic struct {
-	CustomersLoads map[string][]Load
-	TreatedLoadIds map[CustomerLoadId]interface{}
+	CustomersLoads map[string][]inputLoad
+	TreatedLoadIds map[customerLoadId]interface{}
 }
 
 type LoadParser interface {
@@ -52,15 +56,15 @@ type LoadParser interface {
 
 func NewFinanceLogic() LoadParser {
 	return &FinanceLogic{
-		CustomersLoads: make(map[string][]Load),
-		TreatedLoadIds: make(map[CustomerLoadId]interface{}),
+		CustomersLoads: make(map[string][]inputLoad),
+		TreatedLoadIds: make(map[customerLoadId]interface{}),
 	}
 }
 
-func (logic *FinanceLogic) validateLoadAndFill(load Load) bool {
+func (logic *FinanceLogic) validateLoadAndFill(load inputLoad) bool {
 	customerLoads, customerExist := logic.CustomersLoads[load.CustomerId]
 	if !customerExist {
-		customerLoads = make([]Load, 0)
+		customerLoads = make([]inputLoad, 0)
 	}
 	validated := logic.validateLoad(load, customerLoads)
 	if validated {
@@ -70,7 +74,7 @@ func (logic *FinanceLogic) validateLoadAndFill(load Load) bool {
 
 }
 
-func (logic *FinanceLogic) validateLoad(load Load, customerLoads []Load) bool {
+func (logic *FinanceLogic) validateLoad(load inputLoad, customerLoads []inputLoad) bool {
 	dayStart := now.With(load.Time).BeginningOfDay().Add(-time.Second)
 	dayEnd := now.With(load.Time).EndOfDay()
 	weekEnd := now.With(load.Time).EndOfWeek()
@@ -103,14 +107,14 @@ func (logic *FinanceLogic) ParseLoads(parsingChannel chan string) ([]string, []e
 	loadResponses := make([]string, 0)
 	loadErrors := make([]error, 0)
 	for line := range parsingChannel {
-		var loadTry Load
+		var loadTry inputLoad
 		err := json.Unmarshal([]byte(line), &loadTry)
 		if err != nil {
 			loadErrors = append(loadErrors, err)
 		}
 		if !logic.addLoadToTreated(loadTry) {
 			loadStatus := logic.validateLoadAndFill(loadTry)
-			loadResponse := LoadResponse{
+			loadResponse := loadResponse{
 				LoadId:     loadTry.LoadId,
 				CustomerId: loadTry.CustomerId,
 				Accepted:   loadStatus,
@@ -128,8 +132,8 @@ func (logic *FinanceLogic) ParseLoads(parsingChannel chan string) ([]string, []e
 }
 
 // addLoadToTreated adds load to the list of treated ones and returns true if already exists
-func (logic *FinanceLogic) addLoadToTreated(load Load) bool {
-	customerLoadId := CustomerLoadId{
+func (logic *FinanceLogic) addLoadToTreated(load inputLoad) bool {
+	customerLoadId := customerLoadId{
 		LoadId:     load.LoadId,
 		CustomerId: load.CustomerId,
 	}
