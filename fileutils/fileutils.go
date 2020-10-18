@@ -12,12 +12,13 @@ func ReadLines(inputFileName string, lineChannel chan string) {
 	defer close(lineChannel)
 	fileBuffer, err := os.Open(inputFileName)
 	if err != nil {
-		log.Fatal("Error opening file ", inputFileName, err)
+		log.Print("Error opening file ", inputFileName, "with error:", err)
+		return
 	}
 
 	defer func() {
 		if err = fileBuffer.Close(); err != nil {
-			log.Fatal(err)
+			log.Print(err)
 		}
 	}()
 
@@ -27,7 +28,7 @@ func ReadLines(inputFileName string, lineChannel chan string) {
 	}
 	err = lineScanner.Err()
 	if err != nil {
-		log.Fatal(err)
+		log.Print("Error reading one line:", err)
 	}
 }
 
@@ -44,7 +45,7 @@ func WriteLines(filename string, loadsToWrite []string) error {
 	if err != nil {
 		return err
 	}
-	for _,line := range loadsToWrite {
+	for _, line := range loadsToWrite {
 		fmt.Fprintln(f, line)
 	}
 	if err := f.Close(); err != nil {

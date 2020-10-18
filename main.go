@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/vincentcreusot/finance-limits/fileutils"
 	"github.com/vincentcreusot/finance-limits/logic"
+	"log"
 	"os"
 )
 
@@ -18,12 +19,14 @@ func main() {
 	loadsToWrite, loadsErrors := parser.ParseLoads(lineToParseChannel)
 	if len(loadsErrors) > 0 {
 		for errCount, err := range loadsErrors {
-			fmt.Printf("Error #%d in load: %v", errCount, err)
+			log.Printf("Error #%d in load: %v\n", errCount, err)
 		}
 	}
-	err := fileutils.WriteLines(outputFileName, loadsToWrite)
-	if err != nil {
-		fmt.Println("Error writing lines:", err)
+	if len(loadsToWrite) > 0 {
+		err := fileutils.WriteLines(outputFileName, loadsToWrite)
+		if err != nil {
+			log.Println("Error writing lines:", err)
+		}
 	}
 }
 

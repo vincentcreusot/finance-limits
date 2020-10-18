@@ -578,8 +578,7 @@ func Test_validateLoadAndFillHistory(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			loadParser := NewFinanceLogic()
 			loadParser.CustomersLoads = tt.args.customerHistoryLoads
-			if got := loadParser.validateLoadAndFillHistory(tt.args.load);
-				got != tt.want.returnedValue || !reflect.DeepEqual(loadParser.CustomersLoads, tt.want.customerHistoryLoads) {
+			if got := loadParser.validateLoadAndFillHistory(tt.args.load); got != tt.want.returnedValue || !reflect.DeepEqual(loadParser.CustomersLoads, tt.want.customerHistoryLoads) {
 				t.Errorf("validateLoadAndFillHistory = %v and %v, want %v", got, loadParser.CustomersLoads, tt.want)
 			}
 		})
@@ -694,8 +693,7 @@ func Test_ParseLoads(t *testing.T) {
 				}
 				close(stringChan)
 			}(stringChannel, tt.args.loadStrings)
-			if gotLoads, gotErrors := loadParser.ParseLoads(stringChannel);
-				!reflect.DeepEqual(gotLoads, tt.want.loadResponses) || len(gotErrors) != tt.want.numberOfErrors {
+			if gotLoads, gotErrors := loadParser.ParseLoads(stringChannel); !reflect.DeepEqual(gotLoads, tt.want.loadResponses) || len(gotErrors) != tt.want.numberOfErrors {
 				t.Errorf("ParseLoads = %v,%v want %v", gotLoads, gotErrors, tt.want)
 			}
 		})
