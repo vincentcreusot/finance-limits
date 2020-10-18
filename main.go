@@ -10,16 +10,20 @@ import (
 
 func main() {
 	inputFileName := ""
-	outputFileName:= ""
+	outputFileName := ""
 	validateUsage(&inputFileName, &outputFileName)
 	lineToParseChannel := make(chan string)
 	go fileutils.ReadLines(inputFileName, lineToParseChannel)
 	parser := logic.NewFinanceLogic()
-	loadsToWrite,_ := parser.ParseLoads(lineToParseChannel)
-
+	loadsToWrite, loadsErrors := parser.ParseLoads(lineToParseChannel)
+	if len(loadsErrors) > 0 {
+		for errCount, err := range loadsErrors {
+			fmt.Printf("Error #%d in load: %v", errCount, err)
+		}
+	}
 	err := fileutils.WriteLines(outputFileName, loadsToWrite)
 	if err != nil {
-		fmt.Println ("Error ", err)
+		fmt.Println("Error writing lines:", err)
 	}
 }
 

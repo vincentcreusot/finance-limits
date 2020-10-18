@@ -31,6 +31,8 @@ func ReadLines(inputFileName string, lineChannel chan string) {
 	}
 }
 
+// WriteLines write lines to a file
+// try to remove file if it does not exist
 func WriteLines(filename string, loadsToWrite []string) error {
 	if fileExists(filename) {
 		err := os.Remove(filename)
@@ -51,7 +53,7 @@ func WriteLines(filename string, loadsToWrite []string) error {
 	return nil
 }
 
-
+// fileExists tells if a file exists or not and return false if it's a directory
 func fileExists(filename string) bool {
 	info, err := os.Stat(filename)
 	if os.IsNotExist(err) {
