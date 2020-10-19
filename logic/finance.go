@@ -15,23 +15,23 @@ const (
 
 // inputLoad represents a inputLoad json input
 type inputLoad struct {
-	LoadId     string     `json:"id"`
-	CustomerId string     `json:"customer_id"`
+	LoadID     string     `json:"id"`
+	CustomerID string     `json:"customer_id"`
 	Amount     loadAmount `json:"load_amount"`
 	Time       time.Time  `json:"time"`
 }
 
 // loadResponse response given to a load
 type loadResponse struct {
-	LoadId     string `json:"id"`
-	CustomerId string `json:"customer_id"`
+	LoadID     string `json:"id"`
+	CustomerID string `json:"customer_id"`
 	Accepted   bool   `json:"accepted"`
 }
 
-// customerLoadId couple load / customer
-type customerLoadId struct {
-	LoadId     string
-	CustomerId string
+// customerLoadID couple load / customer
+type customerLoadID struct {
+	LoadID     string
+	CustomerID string
 }
 
 // loadAmount represents the amount value of a load
@@ -54,7 +54,7 @@ func (l *loadAmount) UnmarshalJSON(b []byte) error {
 // FinanceLogic LoadParser implementation for holding history maps
 type FinanceLogic struct {
 	CustomersLoads map[string][]inputLoad
-	TreatedLoadIds map[customerLoadId]interface{}
+	TreatedLoadIds map[customerLoadID]interface{}
 }
 
 // LoadParser interface for defining how to parse loads
@@ -66,19 +66,19 @@ type LoadParser interface {
 func NewFinanceLogic() *FinanceLogic {
 	return &FinanceLogic{
 		CustomersLoads: make(map[string][]inputLoad),
-		TreatedLoadIds: make(map[customerLoadId]interface{}),
+		TreatedLoadIds: make(map[customerLoadID]interface{}),
 	}
 }
 
 // validateLoadAndFillHistory deals with load history for each customer and validate
 func (logic *FinanceLogic) validateLoadAndFillHistory(load inputLoad) bool {
-	customerLoads, customerExist := logic.CustomersLoads[load.CustomerId]
+	customerLoads, customerExist := logic.CustomersLoads[load.CustomerID]
 	if !customerExist {
 		customerLoads = make([]inputLoad, 0)
 	}
 	validated := validateLoad(load, customerLoads)
 	if validated {
-		logic.CustomersLoads[load.CustomerId] = append(customerLoads, load)
+		logic.CustomersLoads[load.CustomerID] = append(customerLoads, load)
 	}
 	return validated
 }
@@ -127,8 +127,8 @@ func (logic *FinanceLogic) ParseLoads(parsingChannel chan string) ([]string, []e
 			if logic.addCustomerLoadToTreated(loadTry) { // do not treat if (loadid, customerid)  couple already exists
 				loadStatus := logic.validateLoadAndFillHistory(loadTry)
 				loadResponse := loadResponse{
-					LoadId:     loadTry.LoadId,
-					CustomerId: loadTry.CustomerId,
+					LoadID:     loadTry.LoadID,
+					CustomerID: loadTry.CustomerID,
 					Accepted:   loadStatus,
 				}
 				loadResponseString, err := json.Marshal(loadResponse)
@@ -146,14 +146,14 @@ func (logic *FinanceLogic) ParseLoads(parsingChannel chan string) ([]string, []e
 
 // addCustomerLoadToTreated adds load to the list of treated ones and returns false if not added (already exists)
 func (logic *FinanceLogic) addCustomerLoadToTreated(load inputLoad) bool {
-	customerLoadId := customerLoadId{
-		LoadId:     load.LoadId,
-		CustomerId: load.CustomerId,
+	customerLoadID := customerLoadID{
+		LoadID:     load.LoadID,
+		CustomerID: load.CustomerID,
 	}
-	_, loadExist := logic.TreatedLoadIds[customerLoadId]
+	_, loadExist := logic.TreatedLoadIds[customerLoadID]
 	if loadExist {
 		return false
 	}
-	logic.TreatedLoadIds[customerLoadId] = nil
+	logic.TreatedLoadIds[customerLoadID] = nil
 	return true
 }

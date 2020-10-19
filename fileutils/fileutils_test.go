@@ -5,6 +5,8 @@ import (
 	"reflect"
 	"runtime"
 	"testing"
+	"time"
+	"fmt"
 )
 
 func Test_ReadLines(t *testing.T) {
@@ -50,6 +52,53 @@ func Test_ReadLines(t *testing.T) {
 			}
 			if !reflect.DeepEqual(linesParsed, tt.want.lines) {
 				t.Errorf("ReadFile = %v, want %v", linesParsed, tt.want)
+			}
+		})
+	}
+}
+
+func Test_WriteLines(t *testing.T) {
+	_, testFileName, _, _ := runtime.Caller(0)
+	baseFolder := filepath.Dir(testFileName)
+
+	type args struct {
+		filename string
+		lines []string
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{
+			name: "newFile",
+			args: args{
+				filename: baseFolder + "/../test/newFile_"+ fmt.Sprintf("%d", time.Now().Unix()) + ".txt",
+				lines: []string{"first line", "second line"},
+			},
+			want: false,
+		},
+		{
+			name: "existingFile",
+			args: args{
+				filename: baseFolder + "/../test/existingfiletowrite",
+				lines: []string{"first line", "second line"},
+			},
+			want: false,
+		},
+		{
+			name: "notWritable",
+			args: args{
+				filename: "notExistingFolder/notexisting.txt",
+				lines: make([]string,0),
+			},
+			want: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := WriteLines(tt.args.filename, tt.args.lines) ; (got != nil) != tt.want {
+				t.Errorf("WriteLines = %v, want %v", got, tt.want)
 			}
 		})
 	}

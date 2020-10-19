@@ -27,8 +27,8 @@ func Test_UnmarshalJSON(t *testing.T) {
 			},
 			want: output{
 				load: inputLoad{
-					LoadId:     "1234",
-					CustomerId: "2345",
+					LoadID:     "1234",
+					CustomerID: "2345",
 					Amount:     loadAmount{Value: 123.45},
 					Time:       time.Date(2018, time.January, 1, 0, 0, 0, 0, time.UTC),
 				},
@@ -42,8 +42,8 @@ func Test_UnmarshalJSON(t *testing.T) {
 			},
 			want: output{
 				load: inputLoad{
-					LoadId:     "1234",
-					CustomerId: "2345",
+					LoadID:     "1234",
+					CustomerID: "2345",
 					Amount:     loadAmount{Value: 0},
 					Time:       time.Date(0001, time.January, 1, 0, 0, 0, 0, time.UTC), // time not parsed because of error in amount
 				},
@@ -77,8 +77,8 @@ func Test_validateLoad(t *testing.T) {
 			"validateAcceptedNoHistory",
 			args{
 				load: inputLoad{
-					LoadId:     "1",
-					CustomerId: "1",
+					LoadID:     "1",
+					CustomerID: "1",
 					Amount:     loadAmount{Value: 3000},
 					Time:       time.Date(2000, time.Month(1), 1, 10, 0, 0, 0, time.UTC),
 				},
@@ -90,8 +90,8 @@ func Test_validateLoad(t *testing.T) {
 			"validateRefusedMaxAmountNoHistory",
 			args{
 				load: inputLoad{
-					LoadId:     "1",
-					CustomerId: "1",
+					LoadID:     "1",
+					CustomerID: "1",
 					Amount:     loadAmount{Value: 6000},
 					Time:       time.Date(2000, time.Month(1), 1, 10, 0, 0, 0, time.UTC),
 				},
@@ -103,15 +103,15 @@ func Test_validateLoad(t *testing.T) {
 			"validateMaxAmountDifferentDays",
 			args{
 				load: inputLoad{
-					LoadId:     "2",
-					CustomerId: "1",
+					LoadID:     "2",
+					CustomerID: "1",
 					Amount:     loadAmount{Value: 3000},
 					Time:       time.Date(2000, time.Month(1), 2, 10, 0, 0, 0, time.UTC),
 				},
 				historyLoads: []inputLoad{
 					inputLoad{
-						LoadId:     "1",
-						CustomerId: "1",
+						LoadID:     "1",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 3000},
 						Time:       time.Date(2000, time.Month(1), 1, 10, 0, 0, 0, time.UTC),
 					},
@@ -123,15 +123,15 @@ func Test_validateLoad(t *testing.T) {
 			"validateMaxAmountDay",
 			args{
 				load: inputLoad{
-					LoadId:     "2",
-					CustomerId: "1",
+					LoadID:     "2",
+					CustomerID: "1",
 					Amount:     loadAmount{Value: 3000},
 					Time:       time.Date(2000, time.Month(1), 1, 10, 0, 0, 0, time.UTC),
 				},
 				historyLoads: []inputLoad{
 					inputLoad{
-						LoadId:     "1",
-						CustomerId: "1",
+						LoadID:     "1",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 3000},
 						Time:       time.Date(2000, time.Month(1), 1, 10, 0, 0, 0, time.UTC),
 					},
@@ -143,15 +143,15 @@ func Test_validateLoad(t *testing.T) {
 			"validateExactMaxAmountDay",
 			args{
 				load: inputLoad{
-					LoadId:     "2",
-					CustomerId: "1",
+					LoadID:     "2",
+					CustomerID: "1",
 					Amount:     loadAmount{Value: 3000},
 					Time:       time.Date(2000, time.Month(1), 1, 10, 0, 0, 0, time.UTC),
 				},
 				historyLoads: []inputLoad{
 					inputLoad{
-						LoadId:     "1",
-						CustomerId: "1",
+						LoadID:     "1",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 2000},
 						Time:       time.Date(2000, time.Month(1), 1, 10, 0, 0, 0, time.UTC),
 					},
@@ -163,27 +163,27 @@ func Test_validateLoad(t *testing.T) {
 			"validateMaxCountDay",
 			args{
 				load: inputLoad{
-					LoadId:     "4",
-					CustomerId: "1",
+					LoadID:     "4",
+					CustomerID: "1",
 					Amount:     loadAmount{Value: 1000},
 					Time:       time.Date(2000, time.Month(1), 1, 15, 0, 0, 0, time.UTC),
 				},
 				historyLoads: []inputLoad{
 					inputLoad{
-						LoadId:     "1",
-						CustomerId: "1",
+						LoadID:     "1",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 1000},
 						Time:       time.Date(2000, time.Month(1), 1, 10, 0, 0, 0, time.UTC),
 					},
 					inputLoad{
-						LoadId:     "2",
-						CustomerId: "1",
+						LoadID:     "2",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 1000},
 						Time:       time.Date(2000, time.Month(1), 1, 11, 0, 0, 0, time.UTC),
 					},
 					inputLoad{
-						LoadId:     "3",
-						CustomerId: "1",
+						LoadID:     "3",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 1000},
 						Time:       time.Date(2000, time.Month(1), 1, 12, 0, 0, 0, time.UTC),
 					},
@@ -195,21 +195,21 @@ func Test_validateLoad(t *testing.T) {
 			"validateExactCountDay",
 			args{
 				load: inputLoad{
-					LoadId:     "4",
-					CustomerId: "1",
+					LoadID:     "4",
+					CustomerID: "1",
 					Amount:     loadAmount{Value: 1000},
 					Time:       time.Date(2000, time.Month(1), 1, 15, 0, 0, 0, time.UTC),
 				},
 				historyLoads: []inputLoad{
 					inputLoad{
-						LoadId:     "1",
-						CustomerId: "1",
+						LoadID:     "1",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 1000},
 						Time:       time.Date(2000, time.Month(1), 1, 10, 0, 0, 0, time.UTC),
 					},
 					inputLoad{
-						LoadId:     "2",
-						CustomerId: "1",
+						LoadID:     "2",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 1000},
 						Time:       time.Date(2000, time.Month(1), 1, 11, 0, 0, 0, time.UTC),
 					},
@@ -221,27 +221,27 @@ func Test_validateLoad(t *testing.T) {
 			"validateMaxCountOnDifferentDays",
 			args{
 				load: inputLoad{
-					LoadId:     "4",
-					CustomerId: "1",
+					LoadID:     "4",
+					CustomerID: "1",
 					Amount:     loadAmount{Value: 1000},
 					Time:       time.Date(2000, time.Month(1), 2, 15, 0, 0, 0, time.UTC),
 				},
 				historyLoads: []inputLoad{
 					inputLoad{
-						LoadId:     "1",
-						CustomerId: "1",
+						LoadID:     "1",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 1000},
 						Time:       time.Date(2000, time.Month(1), 1, 10, 0, 0, 0, time.UTC),
 					},
 					inputLoad{
-						LoadId:     "2",
-						CustomerId: "1",
+						LoadID:     "2",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 1000},
 						Time:       time.Date(2000, time.Month(1), 1, 11, 0, 0, 0, time.UTC),
 					},
 					inputLoad{
-						LoadId:     "3",
-						CustomerId: "1",
+						LoadID:     "3",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 1000},
 						Time:       time.Date(2000, time.Month(1), 1, 12, 0, 0, 0, time.UTC),
 					},
@@ -253,27 +253,27 @@ func Test_validateLoad(t *testing.T) {
 			"validateExactMaxOnWeek",
 			args{
 				load: inputLoad{
-					LoadId:     "4",
-					CustomerId: "1",
+					LoadID:     "4",
+					CustomerID: "1",
 					Amount:     loadAmount{Value: 5000},
 					Time:       time.Date(2020, time.Month(1), 9, 15, 0, 0, 0, time.UTC),
 				},
 				historyLoads: []inputLoad{
 					inputLoad{
-						LoadId:     "1",
-						CustomerId: "1",
+						LoadID:     "1",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 5000},
 						Time:       time.Date(2020, time.Month(1), 6, 10, 0, 0, 0, time.UTC), // 6th Jan 2020 is a Monday
 					},
 					inputLoad{
-						LoadId:     "2",
-						CustomerId: "1",
+						LoadID:     "2",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 5000},
 						Time:       time.Date(2020, time.Month(1), 7, 11, 0, 0, 0, time.UTC),
 					},
 					inputLoad{
-						LoadId:     "3",
-						CustomerId: "1",
+						LoadID:     "3",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 5000},
 						Time:       time.Date(2020, time.Month(1), 8, 12, 0, 0, 0, time.UTC),
 					},
@@ -285,33 +285,33 @@ func Test_validateLoad(t *testing.T) {
 			"validateMaxOnWeek",
 			args{
 				load: inputLoad{
-					LoadId:     "5",
-					CustomerId: "1",
+					LoadID:     "5",
+					CustomerID: "1",
 					Amount:     loadAmount{Value: 4000},
 					Time:       time.Date(2020, time.Month(1), 10, 15, 0, 0, 0, time.UTC),
 				},
 				historyLoads: []inputLoad{
 					inputLoad{
-						LoadId:     "1",
-						CustomerId: "1",
+						LoadID:     "1",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 5000},
 						Time:       time.Date(2020, time.Month(1), 6, 10, 0, 0, 0, time.UTC), // 6 Jan is a Monday
 					},
 					inputLoad{
-						LoadId:     "2",
-						CustomerId: "1",
+						LoadID:     "2",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 5000},
 						Time:       time.Date(2020, time.Month(1), 7, 11, 0, 0, 0, time.UTC),
 					},
 					inputLoad{
-						LoadId:     "3",
-						CustomerId: "1",
+						LoadID:     "3",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 5000},
 						Time:       time.Date(2020, time.Month(1), 8, 12, 0, 0, 0, time.UTC),
 					},
 					inputLoad{
-						LoadId:     "4",
-						CustomerId: "1",
+						LoadID:     "4",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 3000},
 						Time:       time.Date(2020, time.Month(1), 9, 12, 0, 0, 0, time.UTC),
 					},
@@ -323,33 +323,33 @@ func Test_validateLoad(t *testing.T) {
 			"validateMaxOnTwoWeeks",
 			args{
 				load: inputLoad{
-					LoadId:     "5",
-					CustomerId: "1",
+					LoadID:     "5",
+					CustomerID: "1",
 					Amount:     loadAmount{Value: 4000},
 					Time:       time.Date(2020, time.Month(1), 13, 15, 0, 0, 0, time.UTC),
 				},
 				historyLoads: []inputLoad{
 					inputLoad{
-						LoadId:     "1",
-						CustomerId: "1",
+						LoadID:     "1",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 5000},
 						Time:       time.Date(2020, time.Month(1), 6, 10, 0, 0, 0, time.UTC), // 6 Jan is a Monday
 					},
 					inputLoad{
-						LoadId:     "2",
-						CustomerId: "1",
+						LoadID:     "2",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 5000},
 						Time:       time.Date(2020, time.Month(1), 7, 11, 0, 0, 0, time.UTC),
 					},
 					inputLoad{
-						LoadId:     "3",
-						CustomerId: "1",
+						LoadID:     "3",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 5000},
 						Time:       time.Date(2020, time.Month(1), 8, 12, 0, 0, 0, time.UTC),
 					},
 					inputLoad{
-						LoadId:     "4",
-						CustomerId: "1",
+						LoadID:     "4",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 3000},
 						Time:       time.Date(2020, time.Month(1), 9, 12, 0, 0, 0, time.UTC),
 					},
@@ -361,33 +361,33 @@ func Test_validateLoad(t *testing.T) {
 			"validateMidnightOnWeeks",
 			args{
 				load: inputLoad{
-					LoadId:     "5",
-					CustomerId: "1",
+					LoadID:     "5",
+					CustomerID: "1",
 					Amount:     loadAmount{Value: 4000},
 					Time:       time.Date(2020, time.Month(1), 12, 23, 59, 59, 0, time.UTC).Add(time.Second),
 				},
 				historyLoads: []inputLoad{
 					inputLoad{
-						LoadId:     "1",
-						CustomerId: "1",
+						LoadID:     "1",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 5000},
 						Time:       time.Date(2020, time.Month(1), 6, 10, 0, 0, 0, time.UTC), // 6 Jan is a Monday
 					},
 					inputLoad{
-						LoadId:     "2",
-						CustomerId: "1",
+						LoadID:     "2",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 5000},
 						Time:       time.Date(2020, time.Month(1), 7, 11, 0, 0, 0, time.UTC),
 					},
 					inputLoad{
-						LoadId:     "3",
-						CustomerId: "1",
+						LoadID:     "3",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 5000},
 						Time:       time.Date(2020, time.Month(1), 8, 12, 0, 0, 0, time.UTC),
 					},
 					inputLoad{
-						LoadId:     "4",
-						CustomerId: "1",
+						LoadID:     "4",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 3000},
 						Time:       time.Date(2020, time.Month(1), 9, 12, 0, 0, 0, time.UTC),
 					},
@@ -399,15 +399,15 @@ func Test_validateLoad(t *testing.T) {
 			"validateMidnightOnTwoDays",
 			args{
 				load: inputLoad{
-					LoadId:     "5",
-					CustomerId: "1",
+					LoadID:     "5",
+					CustomerID: "1",
 					Amount:     loadAmount{Value: 4000},
 					Time:       time.Date(2020, time.Month(1), 7, 0, 0, 0, 0, time.UTC),
 				},
 				historyLoads: []inputLoad{
 					inputLoad{
-						LoadId:     "1",
-						CustomerId: "1",
+						LoadID:     "1",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 3000},
 						Time:       time.Date(2020, time.Month(1), 6, 10, 0, 0, 0, time.UTC), // 6 Jan is a Monday
 					},
@@ -419,15 +419,15 @@ func Test_validateLoad(t *testing.T) {
 			"validateMidnightMinusOneSecond",
 			args{
 				load: inputLoad{
-					LoadId:     "5",
-					CustomerId: "1",
+					LoadID:     "5",
+					CustomerID: "1",
 					Amount:     loadAmount{Value: 4000},
 					Time:       time.Date(2020, time.Month(1), 7, 0, 0, 0, 0, time.UTC).Add(-time.Second),
 				},
 				historyLoads: []inputLoad{
 					inputLoad{
-						LoadId:     "1",
-						CustomerId: "1",
+						LoadID:     "1",
+						CustomerID: "1",
 						Amount:     loadAmount{Value: 3000},
 						Time:       time.Date(2020, time.Month(1), 6, 10, 0, 0, 0, time.UTC), // 6 Jan is a Monday
 					},
@@ -464,8 +464,8 @@ func Test_validateLoadAndFillHistory(t *testing.T) {
 			"validateEmptyAccepted",
 			args{
 				load: inputLoad{
-					LoadId:     "1",
-					CustomerId: "1",
+					LoadID:     "1",
+					CustomerID: "1",
 					Amount:     loadAmount{Value: 3000},
 					Time:       time.Date(2000, time.Month(1), 1, 10, 0, 0, 0, time.UTC),
 				},
@@ -476,8 +476,8 @@ func Test_validateLoadAndFillHistory(t *testing.T) {
 				customerHistoryLoads: map[string][]inputLoad{
 					"1": {
 						inputLoad{
-							LoadId:     "1",
-							CustomerId: "1",
+							LoadID:     "1",
+							CustomerID: "1",
 							Amount:     loadAmount{Value: 3000},
 							Time:       time.Date(2000, time.Month(1), 1, 10, 0, 0, 0, time.UTC),
 						}},
@@ -488,8 +488,8 @@ func Test_validateLoadAndFillHistory(t *testing.T) {
 			"validateEmptyNotAccepted",
 			args{
 				load: inputLoad{
-					LoadId:     "1",
-					CustomerId: "1",
+					LoadID:     "1",
+					CustomerID: "1",
 					Amount:     loadAmount{Value: 6000},
 					Time:       time.Date(2000, time.Month(1), 1, 10, 0, 0, 0, time.UTC),
 				},
@@ -504,16 +504,16 @@ func Test_validateLoadAndFillHistory(t *testing.T) {
 			"validateNotEmptyAccepted",
 			args{
 				load: inputLoad{
-					LoadId:     "1",
-					CustomerId: "1",
+					LoadID:     "1",
+					CustomerID: "1",
 					Amount:     loadAmount{Value: 3000},
 					Time:       time.Date(2000, time.Month(1), 1, 10, 0, 0, 0, time.UTC),
 				},
 				customerHistoryLoads: map[string][]inputLoad{
 					"1": {
 						inputLoad{
-							LoadId:     "2",
-							CustomerId: "1",
+							LoadID:     "2",
+							CustomerID: "1",
 							Amount:     loadAmount{Value: 1000},
 							Time:       time.Date(2000, time.Month(1), 1, 5, 0, 0, 0, time.UTC),
 						},
@@ -525,14 +525,14 @@ func Test_validateLoadAndFillHistory(t *testing.T) {
 				customerHistoryLoads: map[string][]inputLoad{
 					"1": {
 						inputLoad{
-							LoadId:     "2",
-							CustomerId: "1",
+							LoadID:     "2",
+							CustomerID: "1",
 							Amount:     loadAmount{Value: 1000},
 							Time:       time.Date(2000, time.Month(1), 1, 5, 0, 0, 0, time.UTC),
 						},
 						inputLoad{
-							LoadId:     "1",
-							CustomerId: "1",
+							LoadID:     "1",
+							CustomerID: "1",
 							Amount:     loadAmount{Value: 3000},
 							Time:       time.Date(2000, time.Month(1), 1, 10, 0, 0, 0, time.UTC),
 						}},
@@ -543,16 +543,16 @@ func Test_validateLoadAndFillHistory(t *testing.T) {
 			"validateNotEmptyNotAccepted",
 			args{
 				load: inputLoad{
-					LoadId:     "1",
-					CustomerId: "1",
+					LoadID:     "1",
+					CustomerID: "1",
 					Amount:     loadAmount{Value: 3000},
 					Time:       time.Date(2000, time.Month(1), 1, 10, 0, 0, 0, time.UTC),
 				},
 				customerHistoryLoads: map[string][]inputLoad{
 					"1": {
 						inputLoad{
-							LoadId:     "2",
-							CustomerId: "1",
+							LoadID:     "2",
+							CustomerID: "1",
 							Amount:     loadAmount{Value: 3000},
 							Time:       time.Date(2000, time.Month(1), 1, 5, 0, 0, 0, time.UTC),
 						},
@@ -564,8 +564,8 @@ func Test_validateLoadAndFillHistory(t *testing.T) {
 				customerHistoryLoads: map[string][]inputLoad{
 					"1": {
 						inputLoad{
-							LoadId:     "2",
-							CustomerId: "1",
+							LoadID:     "2",
+							CustomerID: "1",
 							Amount:     loadAmount{Value: 3000},
 							Time:       time.Date(2000, time.Month(1), 1, 5, 0, 0, 0, time.UTC),
 						}},
@@ -588,7 +588,7 @@ func Test_validateLoadAndFillHistory(t *testing.T) {
 func Test_addCustomerLoadToTreated(t *testing.T) {
 	type args struct {
 		load           inputLoad
-		treatedLoadIds map[customerLoadId]interface{}
+		treatedLoadIds map[customerLoadID]interface{}
 	}
 
 	tests := []struct {
@@ -600,12 +600,12 @@ func Test_addCustomerLoadToTreated(t *testing.T) {
 			name: "NewCustomerLoad",
 			args: args{
 				load: inputLoad{
-					LoadId:     "1",
-					CustomerId: "1",
+					LoadID:     "1",
+					CustomerID: "1",
 					Amount:     loadAmount{},
 					Time:       time.Time{},
 				},
-				treatedLoadIds: make(map[customerLoadId]interface{}),
+				treatedLoadIds: make(map[customerLoadID]interface{}),
 			},
 			want: true,
 		},
@@ -613,15 +613,15 @@ func Test_addCustomerLoadToTreated(t *testing.T) {
 			name: "ExistingCustomerLoad",
 			args: args{
 				load: inputLoad{
-					LoadId:     "1",
-					CustomerId: "1",
+					LoadID:     "1",
+					CustomerID: "1",
 					Amount:     loadAmount{},
 					Time:       time.Time{},
 				},
-				treatedLoadIds: map[customerLoadId]interface{}{
-					customerLoadId{
-						LoadId:     "1",
-						CustomerId: "1",
+				treatedLoadIds: map[customerLoadID]interface{}{
+					customerLoadID{
+						LoadID:     "1",
+						CustomerID: "1",
 					}: nil,
 				},
 			},
