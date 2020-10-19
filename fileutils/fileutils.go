@@ -12,12 +12,13 @@ func ReadLines(inputFileName string, lineChannel chan string) {
 	defer close(lineChannel)
 	fileBuffer, err := os.Open(inputFileName)
 	if err != nil {
-		log.Fatal("Error opening file ", inputFileName, err)
+		log.Print("Error opening file ", inputFileName, "with error:", err)
+		return
 	}
 
 	defer func() {
 		if err = fileBuffer.Close(); err != nil {
-			log.Fatal(err)
+			log.Print(err)
 		}
 	}()
 
@@ -27,10 +28,12 @@ func ReadLines(inputFileName string, lineChannel chan string) {
 	}
 	err = lineScanner.Err()
 	if err != nil {
-		log.Fatal(err)
+		log.Print("Error reading one line:", err)
 	}
 }
 
+// WriteLines write lines to a file
+// try to remove file if it does not exist
 func WriteLines(filename string, loadsToWrite []string) error {
 	if fileExists(filename) {
 		err := os.Remove(filename)
@@ -42,7 +45,7 @@ func WriteLines(filename string, loadsToWrite []string) error {
 	if err != nil {
 		return err
 	}
-	for _,line := range loadsToWrite {
+	for _, line := range loadsToWrite {
 		fmt.Fprintln(f, line)
 	}
 	if err := f.Close(); err != nil {
@@ -51,7 +54,7 @@ func WriteLines(filename string, loadsToWrite []string) error {
 	return nil
 }
 
-
+// fileExists tells if a file exists or not and return false if it's a directory
 func fileExists(filename string) bool {
 	info, err := os.Stat(filename)
 	if os.IsNotExist(err) {

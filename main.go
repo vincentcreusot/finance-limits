@@ -5,21 +5,28 @@ import (
 	"fmt"
 	"github.com/vincentcreusot/finance-limits/fileutils"
 	"github.com/vincentcreusot/finance-limits/logic"
+	"log"
 	"os"
 )
 
 func main() {
 	inputFileName := ""
-	outputFileName:= ""
+	outputFileName := ""
 	validateUsage(&inputFileName, &outputFileName)
 	lineToParseChannel := make(chan string)
 	go fileutils.ReadLines(inputFileName, lineToParseChannel)
 	parser := logic.NewFinanceLogic()
-	loadsToWrite,_ := parser.ParseLoads(lineToParseChannel)
-
-	err := fileutils.WriteLines(outputFileName, loadsToWrite)
-	if err != nil {
-		fmt.Println ("Error ", err)
+	loadsToWrite, loadsErrors := parser.ParseLoads(lineToParseChannel)
+	if len(loadsErrors) > 0 {
+		for errCount, err := range loadsErrors {
+			log.Printf("Error #%d in load: %v\n", errCount, err)
+		}
+	}
+	if len(loadsToWrite) > 0 {
+		err := fileutils.WriteLines(outputFileName, loadsToWrite)
+		if err != nil {
+			log.Println("Error writing lines:", err)
+		}
 	}
 }
 
